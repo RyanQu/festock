@@ -17,18 +17,50 @@ def get_html(url):
     'Upgrade-Insecure-Requests': '1',\
     'User-Agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.95 Safari/537.36'
     }
+    print "Get html"
     html=requests.get(url,headers=head).text.encode('utf-8')
     time.sleep(3)
     return html
 
-url='https://list.jd.com/list.html?cat=737,13297,1300&ev=3680_6820&trans=1&page=5&JL=6_0_0#J_main'
-html=get_html(url)
-print type(html)
-soup = BeautifulSoup(html,"html.parser")
-cur = soup(class_="fp-text")
-for sp in cur:
-    page=sp.b.string
-print page
-#f = open('index.html','w')
-#f.write(html.encode('utf-8'))
-#f.close()
+def initial(url1,url2):
+    print "Intialization"
+    url=url1+'1'+url2
+    html=get_html(url)
+    #print type(html)
+    soup = BeautifulSoup(html,"html.parser")
+    cur = soup(class_="fp-text")
+    for sp in cur:
+        all_page=sp.i.string
+    print "There are "+all_page+" pages in total"
+    all_page=int(unicode(all_page).encode('utf-8'))
+    print type(all_page)
+    return all_page
+
+def collect_data(page_num):
+    print "Collect data"
+    for i in range(1,page_num+1):
+        url='https://list.jd.com/list.html?cat=737,13297,1300&ev=3680_6820&trans=1&page='+str(i)+'&JL=6_0_0#J_main'
+        html=get_html(url)
+        soup = BeautifulSoup(html,"html.parser")
+        cur = soup(class_="fp-text")
+        for sp in cur:
+            page=sp.b.string
+            print page
+
+
+f = open('data-set.txt','w')
+f.close()
+all_page=initial('https://list.jd.com/list.html?cat=737,13297,1300&ev=3680_6820&trans=1&page=','&JL=6_0_0#J_main')
+collect_data(all_page)
+
+# url='https://list.jd.com/list.html?cat=737,13297,1300&ev=3680_6820&trans=1&page=1&JL=6_0_0#J_main'
+# html=get_html(url)
+# #print type(html)
+# soup = BeautifulSoup(html,"html.parser")
+# cur = soup(class_="fp-text")
+# for sp in cur:
+#     page=sp.b.string
+#     all_page=sp.i.string
+# print "There are "+all_page+" pages in total"
+# print "This is page No."+page
+
