@@ -24,9 +24,10 @@ def get_html(url):
 url='https://list.jd.com/list.html?cat=737,13297,1300&ev=3680_6820&trans=1&page=1&JL=6_0_0#J_main'
 html=get_html(url)
 print type(html)
-#soup = BeautifulSoup(html)
-#cur = soup.a["curr"]
-#print cur
+soup = BeautifulSoup(html,"html.parser")
+cur = soup(class_="fp-text")
+for sp in cur:
+    print sp.b.string
 #f = open('index.html','w')
 #f.write(html.encode('utf-8'))
 #f.close()
