@@ -1,8 +1,12 @@
-#coding=utf-8
+# -*- coding: utf-8 -*-
 import requests
 from bs4 import BeautifulSoup
 import re
 import time
+import sys
+
+reload(sys)
+sys.setdefaultencoding('utf-8')
 
 def get_html(url):
     head={
@@ -36,22 +40,48 @@ def initial(url1,url2):
     print type(all_page)
     return all_page
 
+def get_item(page_curr):
+    url = 'https://list.jd.com/list.html?cat=737,13297,1300&ev=3680_6820&trans=1&page='+str(page_curr)+'&JL=6_0_0#J_main'
+    html = get_html(url)
+    soup = BeautifulSoup(html,"html.parser")
+    cur = soup(class_="fp-text")
+    for sp in cur:
+        page=sp.b.string
+        print "This is page: "+page
+
+    reg_item=r'<li class="gl-item">(.*?)</li>'
+    item=re.findall(reg_item,html,re.S)
+    #print type(item)
+    return(str(item))
+
 def collect_data(page_num):
-    print "Collect data"
+    print "collect_data"
     for i in range(1,page_num+1):
-        url='https://list.jd.com/list.html?cat=737,13297,1300&ev=3680_6820&trans=1&page='+str(i)+'&JL=6_0_0#J_main'
-        html=get_html(url)
-        soup = BeautifulSoup(html,"html.parser")
-        cur = soup(class_="fp-text")
-        for sp in cur:
-            page=sp.b.string
-            print page
+        item=get_item(i)
+
+    #Get p_name
+    item_soup = BeautifulSoup(item,"html.parser")
+    _product_name=item_soup.find_all("div","p-name")
+    p_name=[]
+    count=0
+    for sp in _product_name:
+        temp = str(sp.em.string)
+        count+=1
+        #print temp
+        #print unicode(sp.em.string).decode('utf-8')
+        p_name.append(temp)
+    print count
+
+    #Get p_sku_id
+    for i in range(count):
+        reg_sku=r'j-sku-item"  data-sku="(.*?)" vender'
+        p_sku_id = re.findall(reg_sku,item,re.S)
+    print i+1
+    print p_sku_id
 
 
-f = open('data-set.txt','w')
-f.close()
-all_page=initial('https://list.jd.com/list.html?cat=737,13297,1300&ev=3680_6820&trans=1&page=','&JL=6_0_0#J_main')
-collect_data(all_page)
+#all_page=initial('https://list.jd.com/list.html?cat=737,13297,1300&ev=3680_6820&trans=1&page=','&JL=6_0_0#J_main')
+collect_data(1)
 
 # url='https://list.jd.com/list.html?cat=737,13297,1300&ev=3680_6820&trans=1&page=1&JL=6_0_0#J_main'
 # html=get_html(url)
