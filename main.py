@@ -6,6 +6,7 @@ import time
 import sys
 import urllib
 import json
+import random
 
 reload(sys)
 sys.setdefaultencoding('utf-8')
@@ -26,7 +27,8 @@ head={
 def get_html(url):
     print "Get html"
     html=requests.get(url,headers=head).text.encode('utf-8')
-    time.sleep(3)
+    sec = random.randint(2, 5) 
+    time.sleep(sec)
     return html
 
 def initial(url1,url2):
@@ -76,21 +78,30 @@ def get_item(url1,url2,page_curr):
     print p_sku_id
     #print type(item)
 
-    #Get p_price
+    #Get p_price & p_comment
     p_price=[]
+    p_comment=[]
     count=0
     for skuid in p_sku_id:
         count+=1
         print count, '/', i+1, skuid
+
         url_price = 'http://p.3.cn/prices/mgets?skuIds=J_' + skuid + '&type=1'
-        print url_price
+        print "Get price from: "+url_price
         price_json = json.load(urllib.urlopen(url_price))[0]
         #price_json = json.load(requests.get(url_price,headers=head).text)[0]
-        if price_json['p']:  
+        if price_json['p']:
             p_price.append(float(price_json['p']))
+
+        url_comment = 'http://s.club.jd.com/productpage/p-'+skuid+'-s-0-t-0-p-1.html'
+        print "Get comment from: "+url_comment
+        comment_json=json.loads(requests.get(url_comment,headers=head).text.encode('utf-8'))['productCommentSummary']
+        #price_json = json.load(requests.get(url_price,headers=head).text)[0]
+        p_comment.append((int(price_json['score5Count']),int(price_json['score4Count']),int(price_json['score3Count']),int(price_json['score2Count']),int(price_json['score1Count'])))
+
     p_id = range(1,i+1)
     # p_list = zip(p_id, p_sku_id, p_price, p_name)
-    p_list = zip(p_id, p_sku_id, p_price)
+    p_list = zip(p_id, p_sku_id, p_price, p_comment)
     return(p_list)
 
 def collect_data(url1,url2,page_num):
