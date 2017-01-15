@@ -40,8 +40,8 @@ def initial(url1,url2):
     print type(all_page)
     return all_page
 
-def get_item(page_curr):
-    url = 'https://list.jd.com/list.html?cat=737,13297,1300&ev=3680_6820&trans=1&page='+str(page_curr)+'&JL=6_0_0#J_main'
+def get_item(url1,url2,page_curr):
+    url = url1+str(page_curr)+url2
     html = get_html(url)
     soup = BeautifulSoup(html,"html.parser")
     cur = soup(class_="fp-text")
@@ -50,7 +50,7 @@ def get_item(page_curr):
         print "This is page: "+page
 
     reg_item=r'<li class="gl-item">(.*?)</li>'
-    item=re.findall(reg_item,html,re.S)
+    item=str(re.findall(reg_item,html,re.S))
 
     #Get p_name
     item_soup = BeautifulSoup(item,"html.parser")
@@ -75,15 +75,16 @@ def get_item(page_curr):
 
     return(p_name,p_sku_id)
 
-def collect_data(page_num):
+def collect_data(url1,url2,page_num):
     print "collect_data"
     for i in range(1,page_num+1):
-        item=get_item(i)
+        item=get_item(url1,url2,i)
 
-
+url1='https://list.jd.com/list.html?cat=737,13297,1300&ev=3680_6820&trans=1&page='
+url2='&JL=6_0_0#J_main'
 
 #all_page=initial('https://list.jd.com/list.html?cat=737,13297,1300&ev=3680_6820&trans=1&page=','&JL=6_0_0#J_main')
-collect_data(1)
+collect_data(url1,url2,1)
 
 # url='https://list.jd.com/list.html?cat=737,13297,1300&ev=3680_6820&trans=1&page=1&JL=6_0_0#J_main'
 # html=get_html(url)
