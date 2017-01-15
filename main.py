@@ -51,13 +51,6 @@ def get_item(page_curr):
 
     reg_item=r'<li class="gl-item">(.*?)</li>'
     item=re.findall(reg_item,html,re.S)
-    #print type(item)
-    return(str(item))
-
-def collect_data(page_num):
-    print "collect_data"
-    for i in range(1,page_num+1):
-        item=get_item(i)
 
     #Get p_name
     item_soup = BeautifulSoup(item,"html.parser")
@@ -78,6 +71,15 @@ def collect_data(page_num):
         p_sku_id = re.findall(reg_sku,item,re.S)
     print i+1
     print p_sku_id
+    #print type(item)
+
+    return(p_name,p_sku_id)
+
+def collect_data(page_num):
+    print "collect_data"
+    for i in range(1,page_num+1):
+        item=get_item(i)
+
 
 
 #all_page=initial('https://list.jd.com/list.html?cat=737,13297,1300&ev=3680_6820&trans=1&page=','&JL=6_0_0#J_main')
