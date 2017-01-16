@@ -72,7 +72,7 @@ def get_item(url1,url2,page_curr):
         #print temp
         #print unicode(sp.em.string).decode('utf-8')
         p_name.append(temp)
-        if count==3: break
+        if count==2: break
     print p_name
 
     print "Total fine "+str(count)+" product name"
@@ -87,6 +87,8 @@ def get_item(url1,url2,page_curr):
 
     #Get p_price & p_comment
     p_price=[]
+    p_page=[]
+    p_count=[]
     p_comment5=[]
     p_comment4=[]
     p_comment3=[]
@@ -97,8 +99,10 @@ def get_item(url1,url2,page_curr):
     for skuid in p_sku_id:
         count+=1
         print count, '/', i+1, skuid
+        p_page.append(page)
+        p_count.append(count)
 
-        url_price = 'http://p.3.cn/prices/get?type=1&area=1_72_4137&pdtk=&pduid=1484366011879587586832&pdpin=&pdbp=0&skuid=J_' + skuid
+        url_price = 'http://p.3.cn/prices/get?type=1&area=1_72_2799&pdtk=&pduid=14834698456071940921980&pdpin=&pdbp=0&skuid=J_' + skuid
         print "Get price from: "+url_price
         try:
             price_json = json.load(urllib2.urlopen(url_price,timeout=10))[0]
@@ -111,6 +115,9 @@ def get_item(url1,url2,page_curr):
         if price_json['p']:
             print float(price_json['p'])
             p_price.append(float(price_json['p']))
+
+        print p_price
+
         time.sleep(sec)
 
         url_comment = 'http://s.club.jd.com/productpage/p-'+skuid+'-s-0-t-0-p-1.html'
@@ -125,28 +132,30 @@ def get_item(url1,url2,page_curr):
         #price_json = json.load(requests.get(url_price,headers=head).text)[0]
         print int(comment_json['score5Count']),int(comment_json['score1Count'])
         p_comment5.append(int(comment_json['score5Count']))
+        print p_comment5
         p_comment4.append(int(comment_json['score4Count']))
         p_comment3.append(int(comment_json['score3Count']))
         p_comment2.append(int(comment_json['score2Count']))
         p_comment1.append(int(comment_json['score1Count']))
         time.sleep(sec)
 
-        if count==3: break
+        if count==2: break
 
-    p_id = range(1,i+1)
-    p_list = zip(p_id, p_sku_id, p_name, p_price, p_comment5, p_comment4, p_comment3, p_comment2, p_comment1)
+    p_id = range(1,i+2)
+    p_list = zip(p_id, p_page, p_count, p_sku_id, p_name, p_price, p_comment5, p_comment4, p_comment3, p_comment2, p_comment1)
     #p_list = zip(p_id, p_sku_id, p_price, p_comment)
     return(p_list)
 
 def collect_data(url1,url2,page_num):
     print "collect_data"
     f=open('data-set.csv','a')
-    print >> f, '"id","p_sku_id","p_name","p_price","p_comment5","p_comment4","p_comment3","p_comment2","p_comment1"'
+    print >> f, '"id","page","count","p_sku_id","p_name","p_price","p_comment5","p_comment4","p_comment3","p_comment2","p_comment1"'
     for i in range(1,page_num+1):
         p_list=get_item(url1,url2,i)
+        print p_list
         print type(p_list)
         for line in p_list:
-            f.write(line.encode('utf-8'))
+            f.write((str(line)+'\n').strip("()").encode('utf-8'))
             #f.write(line)
 
     f.close()
