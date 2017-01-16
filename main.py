@@ -29,7 +29,7 @@ head={
 
 def get_html(url):
     print "Get html"
-    html=requests.get(url,headers=head).text.encode('utf-8')
+    html=requests.get(url,headers=head).text
     sec = random.randint(2, 5) 
     time.sleep(sec)
     return html
@@ -44,7 +44,7 @@ def initial(url1,url2):
     for sp in cur:
         all_page=sp.i.string
     print "There are "+all_page+" pages in total"
-    all_page=int(unicode(all_page).encode('utf-8'))
+    all_page=int(all_page)
     print type(all_page)
     return all_page
 
@@ -58,7 +58,8 @@ def get_item(url1,url2,page_curr):
         print "This is page: "+page
 
     reg_item = r'<li class="gl-item">(.*?)</li>'
-    item = str(re.findall(reg_item,html,re.S))
+    item = re.findall(reg_item,html,re.S)
+    item = ''.join(item)
 
     #Get p_name
     item_soup = BeautifulSoup(item,"html.parser")
@@ -70,7 +71,10 @@ def get_item(url1,url2,page_curr):
         count+=1
         #print temp
         #print unicode(sp.em.string).decode('utf-8')
-        p_name.append(unicode(temp).decode('utf8'))
+        p_name.append(temp)
+        if count==3: break
+    print p_name
+
     print "Total fine "+str(count)+" product name"
 
     #Get p_sku_id & p_price
@@ -118,17 +122,25 @@ def get_item(url1,url2,page_curr):
         p_comment.append((int(comment_json['score5Count']),int(comment_json['score4Count']),int(comment_json['score3Count']),int(comment_json['score2Count']),int(comment_json['score1Count'])))
         time.sleep(sec)
 
+        if count==3: break
+
     p_id = range(1,i+1)
-    # p_list = zip(p_id, p_sku_id, p_price, p_comment, p_name)
-    p_list = zip(p_id, p_sku_id, p_price, p_comment)
+    p_list = zip(p_id, p_sku_id, p_name, p_price, p_comment)
+    #p_list = zip(p_id, p_sku_id, p_price, p_comment)
     return(p_list)
 
 def collect_data(url1,url2,page_num):
     print "collect_data"
+    f=open('data-set.csv','w')
+    print >> f, '"id","p_sku_id","p_name","p_price","p_comment"'
     for i in range(1,page_num+1):
         p_list=get_item(url1,url2,i)
         print type(p_list)
-        print p_list
+        for line in p_list:
+            #f.write(line.encode('utf-8'))
+            f.write(line)
+
+    f.close()
 
 url1='https://list.jd.com/list.html?cat=737,13297,1300&ev=3680_6820&trans=1&page='
 url2='&JL=6_0_0#J_main'
