@@ -87,7 +87,12 @@ def get_item(url1,url2,page_curr):
 
     #Get p_price & p_comment
     p_price=[]
-    p_comment=[]
+    p_comment5=[]
+    p_comment4=[]
+    p_comment3=[]
+    p_comment2=[]
+    p_comment1=[]
+
     count=0
     for skuid in p_sku_id:
         count+=1
@@ -119,26 +124,30 @@ def get_item(url1,url2,page_curr):
         
         #price_json = json.load(requests.get(url_price,headers=head).text)[0]
         print int(comment_json['score5Count']),int(comment_json['score1Count'])
-        p_comment.append((int(comment_json['score5Count']),int(comment_json['score4Count']),int(comment_json['score3Count']),int(comment_json['score2Count']),int(comment_json['score1Count'])))
+        p_comment5.append(int(comment_json['score5Count']))
+        p_comment4.append(int(comment_json['score4Count']))
+        p_comment3.append(int(comment_json['score3Count']))
+        p_comment2.append(int(comment_json['score2Count']))
+        p_comment1.append(int(comment_json['score1Count']))
         time.sleep(sec)
 
         if count==3: break
 
     p_id = range(1,i+1)
-    p_list = zip(p_id, p_sku_id, p_name, p_price, p_comment)
+    p_list = zip(p_id, p_sku_id, p_name, p_price, p_comment5, p_comment4, p_comment3, p_comment2, p_comment1)
     #p_list = zip(p_id, p_sku_id, p_price, p_comment)
     return(p_list)
 
 def collect_data(url1,url2,page_num):
     print "collect_data"
-    f=open('data-set.csv','w')
-    print >> f, '"id","p_sku_id","p_name","p_price","p_comment"'
+    f=open('data-set.csv','a')
+    print >> f, '"id","p_sku_id","p_name","p_price","p_comment5","p_comment4","p_comment3","p_comment2","p_comment1"'
     for i in range(1,page_num+1):
         p_list=get_item(url1,url2,i)
         print type(p_list)
         for line in p_list:
-            #f.write(line.encode('utf-8'))
-            f.write(line)
+            f.write(line.encode('utf-8'))
+            #f.write(line)
 
     f.close()
 
