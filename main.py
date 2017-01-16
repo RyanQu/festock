@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 import re
 import time
 import sys
-import urllib
+import urllib2
 import json
 import random
 
@@ -23,6 +23,9 @@ head={
     'Upgrade-Insecure-Requests': '1',\
     'User-Agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.95 Safari/537.36'
 }
+# proxy = urllib2.ProxyHandler({'http': '118.123.245.145:3128'})
+# opener = urllib2.build_opener(proxy)
+# urllib2.install_opener(opener)
 
 def get_html(url):
     print "Get html"
@@ -88,19 +91,19 @@ def get_item(url1,url2,page_curr):
 
         url_price = 'http://p.3.cn/prices/mgets?skuIds=J_' + skuid + '&type=1'
         print "Get price from: "+url_price
-        price_json = json.load(urllib.urlopen(url_price))[0]
+        price_json = json.loads(urllib2.urlopen(url_price))[0]
         #price_json = json.load(requests.get(url_price,headers=head).text)[0]
         if price_json['p']:
             p_price.append(float(price_json['p']))
 
         url_comment = 'http://s.club.jd.com/productpage/p-'+skuid+'-s-0-t-0-p-1.html'
         print "Get comment from: "+url_comment
-        comment_json=json.loads(requests.get(url_comment,headers=head).text.encode('utf-8'))['productCommentSummary']
+        comment_json=json.loads(requests.get(url_comment, headers=head).text.encode('utf-8'))['productCommentSummary']
         #price_json = json.load(requests.get(url_price,headers=head).text)[0]
         p_comment.append((int(price_json['score5Count']),int(price_json['score4Count']),int(price_json['score3Count']),int(price_json['score2Count']),int(price_json['score1Count'])))
 
     p_id = range(1,i+1)
-    # p_list = zip(p_id, p_sku_id, p_price, p_name)
+    # p_list = zip(p_id, p_sku_id, p_price, p_comment, p_name)
     p_list = zip(p_id, p_sku_id, p_price, p_comment)
     return(p_list)
 
