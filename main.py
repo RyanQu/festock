@@ -89,18 +89,34 @@ def get_item(url1,url2,page_curr):
         count+=1
         print count, '/', i+1, skuid
 
-        url_price = 'http://p.3.cn/prices/mgets?skuIds=J_' + skuid + '&type=1'
+        url_price = 'http://p.3.cn/prices/get?type=1&area=1_72_4137&pdtk=&pduid=1484366011879587586832&pdpin=&pdbp=0&skuid=J_' + skuid
         print "Get price from: "+url_price
-        price_json = json.loads(urllib2.urlopen(url_price))[0]
+        try:
+            price_json = json.load(urllib2.urlopen(url_price,timeout=10))[0]
+        except:
+            print 'Timeout!'
+            price_json = '{"p":"-2"}'
+
+        sec = random.randint(2, 5) 
         #price_json = json.load(requests.get(url_price,headers=head).text)[0]
         if price_json['p']:
+            print float(price_json['p'])
             p_price.append(float(price_json['p']))
+        time.sleep(sec)
+
 
         url_comment = 'http://s.club.jd.com/productpage/p-'+skuid+'-s-0-t-0-p-1.html'
         print "Get comment from: "+url_comment
-        comment_json=json.loads(requests.get(url_comment, headers=head).text.encode('utf-8'))['productCommentSummary']
+        try:
+            comment_json=json.load(urllib2.urlopen(url_comment,timeout=10))['productCommentSummary']
+        except:
+            print 'Timeout!'
+            comment_json = json.loads('{"score5Count":"-5","score4Count":"-4","score3Count":"-3","score2Count":"-2","score1Count":"-1"}')
+        
         #price_json = json.load(requests.get(url_price,headers=head).text)[0]
-        p_comment.append((int(price_json['score5Count']),int(price_json['score4Count']),int(price_json['score3Count']),int(price_json['score2Count']),int(price_json['score1Count'])))
+        print int(comment_json['score5Count']),int(comment_json['score1Count'])
+        p_comment.append((int(comment_json['score5Count']),int(comment_json['score4Count']),int(comment_json['score3Count']),int(comment_json['score2Count']),int(comment_json['score1Count'])))
+        time.sleep(sec)
 
     p_id = range(1,i+1)
     # p_list = zip(p_id, p_sku_id, p_price, p_comment, p_name)
