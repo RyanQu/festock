@@ -104,11 +104,11 @@ def get_item(url1,url2,page_curr):
             p_price.append(float(price_json['p']))
         time.sleep(sec)
 
-
         url_comment = 'http://s.club.jd.com/productpage/p-'+skuid+'-s-0-t-0-p-1.html'
         print "Get comment from: "+url_comment
         try:
-            comment_json=json.load(urllib2.urlopen(url_comment,timeout=10))['productCommentSummary']
+            comment_json=json.loads(requests.get(url_comment).text.encode('utf-8'))['productCommentSummary']
+            #comment_json=json.load(urllib2.urlopen(url_comment,timeout=10))['productCommentSummary']
         except:
             print 'Timeout!'
             comment_json = json.loads('{"score5Count":"-5","score4Count":"-4","score3Count":"-3","score2Count":"-2","score1Count":"-1"}')
