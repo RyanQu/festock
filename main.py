@@ -1,3 +1,4 @@
+
 # -*- coding: utf-8 -*-
 import requests
 from bs4 import BeautifulSoup
@@ -149,14 +150,15 @@ def get_item(url1,url2,page_curr):
 
 def collect_data(url1,url2,page_num):
     print "collect_data"
+    
     print >> f, '"id","page","count","p_sku_id","p_name","p_price","p_comment5","p_comment4","p_comment3","p_comment2","p_comment1"'
     for i in range(1,page_num+1):
         p_list=get_item(url1,url2,i)
         #print p_list
         #print type(p_list)
         print "Get p_list! Write in data..."
+        f=open('data-set.csv','a')
         for line in p_list:
-            f=open('data-set.csv','a')
             count=0
             for ch in line:
                 count+=1
@@ -164,7 +166,8 @@ def collect_data(url1,url2,page_num):
                     print >> f,ch
                 else:
                     print >> f,ch,',',
-            f.close()
+
+        f.close()
         print "Write-in over, next page."
 
 url1='https://list.jd.com/list.html?cat=737,13297,1300&ev=3680_6820&trans=1&page='
