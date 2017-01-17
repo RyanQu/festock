@@ -36,7 +36,7 @@ def get_html(url):
     return html
 
 def initial(url1,url2):
-    print "Intialization"
+    print "Initialization"
     url=url1+'1'+url2
     html=get_html(url)
     #print type(html)
@@ -150,8 +150,9 @@ def get_item(url1,url2,page_curr):
 
 def collect_data(url1,url2,page_num):
     print "collect_data"
-    
+    f=open('data-set.csv','w')
     print >> f, '"id","page","count","p_sku_id","p_name","p_price","p_comment5","p_comment4","p_comment3","p_comment2","p_comment1"'
+    f.close()
     for i in range(1,page_num+1):
         p_list=get_item(url1,url2,i)
         #print p_list
