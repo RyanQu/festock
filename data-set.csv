@@ -1,21 +1,3 @@
-"id","p_sku_id","p_name","p_price","p_comment5","p_comment4","p_comment3","p_comment2","p_comment1"
-1
-2755826
-方太（FOTILE） ENJOY云魔方 纯平触控 欧式抽油烟机 EMD2T
-4390.0
-10807
-211
-58
-18
-105
-2
-2920507
-方太（FOTILE）EMD2T+FD21BE+13BES 油烟机热水器燃气灶三件套
-6670.0
-1399
-30
-13
-2
-13
-"id","p_sku_id","p_name","p_price","p_comment5","p_comment4","p_comment3","p_comment2","p_comment1"
-1, u'2755826', u'\u65b9\u592a\uff08FOTILE\uff09 ENJOY\u4e91\u9b54\u65b9 \u7eaf\u5e73\u89e6\u63a7 \u6b27\u5f0f\u62bd\u6cb9\u70df\u673a EMD2T', 4390.0, 10808, 211, 58, 18, 1052, u'2920507', u'\u65b9\u592a\uff08FOTILE\uff09EMD2T+FD21BE+13BES \u6cb9\u70df\u673a\u70ed\u6c34\u5668\u71c3\u6c14\u7076\u4e09\u4ef6\u5957', 6670.0, 1399, 30, 13, 2, 13"id","page","count","p_sku_id","p_name","p_price","p_comment5","p_comment4","p_comment3","p_comment2","p_comment1"
+"id","page","count","p_sku_id","p_name","p_price","p_comment5","p_comment4","p_comment3","p_comment2","p_comment1"
+1 , 1 , 1 , 2755826 , 方太（FOTILE） ENJOY云魔方 纯平触控 欧式抽油烟机 EMD2T , 4390.0 , 10810 , 211 , 58 , 18 , 105
+2 , 1 , 2 , 2920507 , 方太（FOTILE）EMD2T+FD21BE+13BES 油烟机热水器燃气灶三件套 , 6670.0 , 1399 , 30 , 13 , 2 , 13

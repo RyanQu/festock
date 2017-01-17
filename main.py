@@ -81,7 +81,8 @@ def get_item(url1,url2,page_curr):
     for i in range(count):
         reg_sku = r'j-sku-item"  data-sku="(.*?)" vender'
         p_sku_id = re.findall(reg_sku,item,re.S)
-    print "Total fine "+str(i+1)+" product id"
+    print "Total fine ",i+1," product id"
+    p_sku_id = [int(j) for j in p_sku_id]
     print p_sku_id
     #print type(item)
 
@@ -99,10 +100,10 @@ def get_item(url1,url2,page_curr):
     for skuid in p_sku_id:
         count+=1
         print count, '/', i+1, skuid
-        p_page.append(page)
+        p_page.append(int(page))
         p_count.append(count)
 
-        url_price = 'http://p.3.cn/prices/get?type=1&area=1_72_2799&pdtk=&pduid=14834698456071940921980&pdpin=&pdbp=0&skuid=J_' + skuid
+        url_price = 'http://p.3.cn/prices/get?type=1&area=1_72_2799&pdtk=&pduid=14834698456071940921980&pdpin=&pdbp=0&skuid=J_' + str(skuid)
         print "Get price from: "+url_price
         try:
             price_json = json.load(urllib2.urlopen(url_price,timeout=10))[0]
@@ -113,14 +114,14 @@ def get_item(url1,url2,page_curr):
         sec = random.randint(2, 5) 
         #price_json = json.load(requests.get(url_price,headers=head).text)[0]
         if price_json['p']:
-            print float(price_json['p'])
+            print price_json['p']
             p_price.append(float(price_json['p']))
 
         print p_price
 
         time.sleep(sec)
 
-        url_comment = 'http://s.club.jd.com/productpage/p-'+skuid+'-s-0-t-0-p-1.html'
+        url_comment = 'http://s.club.jd.com/productpage/p-'+str(skuid)+'-s-0-t-0-p-1.html'
         print "Get comment from: "+url_comment
         try:
             comment_json=json.loads(requests.get(url_comment).text.encode('utf-8'))['productCommentSummary']
@@ -130,13 +131,13 @@ def get_item(url1,url2,page_curr):
             comment_json = json.loads('{"score5Count":"-5","score4Count":"-4","score3Count":"-3","score2Count":"-2","score1Count":"-1"}')
         
         #price_json = json.load(requests.get(url_price,headers=head).text)[0]
-        print int(comment_json['score5Count']),int(comment_json['score1Count'])
-        p_comment5.append(int(comment_json['score5Count']))
+        print comment_json['score5Count'],comment_json['score1Count']
+        p_comment5.append(comment_json['score5Count'])
         print p_comment5
-        p_comment4.append(int(comment_json['score4Count']))
-        p_comment3.append(int(comment_json['score3Count']))
-        p_comment2.append(int(comment_json['score2Count']))
-        p_comment1.append(int(comment_json['score1Count']))
+        p_comment4.append(comment_json['score4Count'])
+        p_comment3.append(comment_json['score3Count'])
+        p_comment2.append(comment_json['score2Count'])
+        p_comment1.append(comment_json['score1Count'])
         time.sleep(sec)
 
         if count==2: break
@@ -155,9 +156,13 @@ def collect_data(url1,url2,page_num):
         print p_list
         print type(p_list)
         for line in p_list:
-            f.write((str(line)+'\n').strip("()").encode('utf-8'))
-            #f.write(line)
-
+            count=0
+            for ch in line:
+                count+=1
+                if count==11:
+                    print >> f,ch
+                else:
+                    print >> f,ch,',',
     f.close()
 
 url1='https://list.jd.com/list.html?cat=737,13297,1300&ev=3680_6820&trans=1&page='
