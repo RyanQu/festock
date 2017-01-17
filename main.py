@@ -28,7 +28,7 @@ head={
 # urllib2.install_opener(opener)
 
 def get_html(url):
-    print "Get html"
+    #print "Get html"
     html=requests.get(url,headers=head).text
     sec = random.randint(2, 5) 
     time.sleep(sec)
@@ -45,7 +45,7 @@ def initial(url1,url2):
         all_page=sp.i.string
     print "There are "+all_page+" pages in total"
     all_page=int(all_page)
-    print type(all_page)
+    #print type(all_page)
     return all_page
 
 def get_item(url1,url2,page_curr):
@@ -72,8 +72,8 @@ def get_item(url1,url2,page_curr):
         #print temp
         #print unicode(sp.em.string).decode('utf-8')
         p_name.append(temp)
-        if count==2: break
-    print p_name
+        #if count==2: break
+    #print p_name
 
     print "Total fine "+str(count)+" product name"
 
@@ -83,7 +83,7 @@ def get_item(url1,url2,page_curr):
         p_sku_id = re.findall(reg_sku,item,re.S)
     print "Total fine ",i+1," product id"
     p_sku_id = [int(j) for j in p_sku_id]
-    print p_sku_id
+    #print p_sku_id
     #print type(item)
 
     #Get p_price & p_comment
@@ -104,7 +104,7 @@ def get_item(url1,url2,page_curr):
         p_count.append(count)
 
         url_price = 'http://p.3.cn/prices/get?type=1&area=1_72_2799&pdtk=&pduid=14834698456071940921980&pdpin=&pdbp=0&skuid=J_' + str(skuid)
-        print "Get price from: "+url_price
+        #print "Get price from: "+url_price
         try:
             price_json = json.load(urllib2.urlopen(url_price,timeout=10))[0]
         except:
@@ -117,12 +117,12 @@ def get_item(url1,url2,page_curr):
             print price_json['p']
             p_price.append(float(price_json['p']))
 
-        print p_price
+        #print p_price
 
         time.sleep(sec)
 
         url_comment = 'http://s.club.jd.com/productpage/p-'+str(skuid)+'-s-0-t-0-p-1.html'
-        print "Get comment from: "+url_comment
+        #print "Get comment from: "+url_comment
         try:
             comment_json=json.loads(requests.get(url_comment).text.encode('utf-8'))['productCommentSummary']
             #comment_json=json.load(urllib2.urlopen(url_comment,timeout=10))['productCommentSummary']
@@ -133,14 +133,14 @@ def get_item(url1,url2,page_curr):
         #price_json = json.load(requests.get(url_price,headers=head).text)[0]
         print comment_json['score5Count'],comment_json['score1Count']
         p_comment5.append(comment_json['score5Count'])
-        print p_comment5
+        #print p_comment5
         p_comment4.append(comment_json['score4Count'])
         p_comment3.append(comment_json['score3Count'])
         p_comment2.append(comment_json['score2Count'])
         p_comment1.append(comment_json['score1Count'])
         time.sleep(sec)
 
-        if count==2: break
+        #if count==2: break
 
     p_id = range(1,i+2)
     p_list = zip(p_id, p_page, p_count, p_sku_id, p_name, p_price, p_comment5, p_comment4, p_comment3, p_comment2, p_comment1)
@@ -149,13 +149,14 @@ def get_item(url1,url2,page_curr):
 
 def collect_data(url1,url2,page_num):
     print "collect_data"
-    f=open('data-set.csv','a')
     print >> f, '"id","page","count","p_sku_id","p_name","p_price","p_comment5","p_comment4","p_comment3","p_comment2","p_comment1"'
     for i in range(1,page_num+1):
         p_list=get_item(url1,url2,i)
-        print p_list
-        print type(p_list)
+        #print p_list
+        #print type(p_list)
+        print "Get p_list! Write in data..."
         for line in p_list:
+            f=open('data-set.csv','a')
             count=0
             for ch in line:
                 count+=1
@@ -163,13 +164,14 @@ def collect_data(url1,url2,page_num):
                     print >> f,ch
                 else:
                     print >> f,ch,',',
-    f.close()
+            f.close()
+        print "Write-in over, next page."
 
 url1='https://list.jd.com/list.html?cat=737,13297,1300&ev=3680_6820&trans=1&page='
 url2='&JL=6_0_0#J_main'
 
-#all_page=initial(url1,url2)
-all_page=1
+all_page=initial(url1,url2)
+#all_page=1
 collect_data(url1,url2,all_page)
 
 
