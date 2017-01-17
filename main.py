@@ -1,3 +1,7 @@
+#Date: 2017.01.17
+#Author: RyQ
+#Name: jd_crawler
+#Ver:0.9
 
 # -*- coding: utf-8 -*-
 import requests

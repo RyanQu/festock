@@ -1,7 +1,4 @@
 # jd_crawler
-Author: RyQ
-Date: 2017/01/16
-Ver: 0.9
 
 ##项目介绍
 ###一些不太相关的话
@@ -160,4 +157,8 @@ url_comment = 'http://s.club.jd.com/productpage/p-'\
 
 ##写在最后
 
-抓取后的数据样式如 `data-set.csv` 文件所示，时间和运算资源有限，暂时只抓了前100多条尝了尝咸淡。
+抓取后的数据样式如 `data-set.csv` 文件所示，时间和运算资源有限，暂时只抓了前100多条尝了尝咸淡。没什么大问题的话，应该可以遍历完这个分类所有的商品。
+
+对抓取的这些数据用了一下词云工具得到下面的图片，有兴趣的也可以玩一下：[词云](https://www.jasondavies.com/wordcloud/)
+
+![Wordcloud](https://github.com/RyanQu/jd_crawler/blob/master/wordcloud.jpeg?raw=true)
